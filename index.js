@@ -5,7 +5,7 @@ require('dotenv').config(); // Nạp biến môi trường từ file .env
 const app = express();
 app.use(express.json()); // Để đọc dữ liệu JSON từ request body
 
-// Firebase Admin SDK initialization
+//Khởi tạo mội trường SDK của Firebase
 admin.initializeApp({
   credential: admin.credential.cert({
     private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Xử lý ký tự xuống dòng
@@ -19,7 +19,7 @@ const collection = db.collection('products'); // Collection products trong Fires
 
 // CRUD APIs
 
-// 1. Create a new product
+// 1. Create a new product: POST
 app.post('/products', async (req, res) => {
   try {
     const product = req.body;
@@ -30,7 +30,7 @@ app.post('/products', async (req, res) => {
   }
 });
 
-// 2. Read all products
+// 2. Read all products : GET
 app.get('/products', async (req, res) => {
   try {
     const snapshot = await collection.get();
@@ -41,7 +41,7 @@ app.get('/products', async (req, res) => {
   }
 });
 
-// 3. Read a product by ID
+// 3. Read a product by ID : GET/id
 app.get('/products/:id', async (req, res) => {
   try {
     const doc = await collection.doc(req.params.id).get();
@@ -54,7 +54,7 @@ app.get('/products/:id', async (req, res) => {
   }
 });
 
-// 4. Update a product by ID
+// 4. Update a product by ID: PUT/id
 app.put('/products/:id', async (req, res) => {
   try {
     const updatedProduct = req.body;
@@ -65,7 +65,7 @@ app.put('/products/:id', async (req, res) => {
   }
 });
 
-// 5. Delete a product by ID
+// 5. Delete a product by ID: DELETE/id
 app.delete('/products/:id', async (req, res) => {
   try {
     await collection.doc(req.params.id).delete();
@@ -75,7 +75,7 @@ app.delete('/products/:id', async (req, res) => {
   }
 });
 
-// Start the server
+// Chạy server với port online hoặc 3000 local
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
