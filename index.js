@@ -5,7 +5,7 @@ require('dotenv').config(); // Nạp biến môi trường từ file .env
 const app = express();
 app.use(express.json()); // Để đọc dữ liệu JSON từ request body
 
-//Khởi tạo mội trường SDK của Firebase
+// Khởi tạo mội trường SDK của Firebase
 admin.initializeApp({
   credential: admin.credential.cert({
     private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Xử lý ký tự xuống dòng
@@ -16,6 +16,11 @@ admin.initializeApp({
 
 const db = admin.firestore();
 const collection = db.collection('products'); // Collection products trong Firestore
+
+// Route cho đường dẫn gốc "/"
+app.get('/', (req, res) => {
+  res.send('Welcome to the Firebase Firestore API');
+});
 
 // CRUD APIs
 
@@ -30,7 +35,7 @@ app.post('/products', async (req, res) => {
   }
 });
 
-// 2. Read all products : GET
+// 2. Read all products: GET
 app.get('/products', async (req, res) => {
   try {
     const snapshot = await collection.get();
@@ -41,7 +46,7 @@ app.get('/products', async (req, res) => {
   }
 });
 
-// 3. Read a product by ID : GET/id
+// 3. Read a product by ID: GET/id
 app.get('/products/:id', async (req, res) => {
   try {
     const doc = await collection.doc(req.params.id).get();
